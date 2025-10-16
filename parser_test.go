@@ -158,7 +158,7 @@ func TestNew_readingError(t *testing.T) {
 
 func TestNew_initError(t *testing.T) {
 	wrongConfigPath := "./fixtures/unmarshal.json"
-	_, err := New().Parse(wrongConfigPath)
+	_, err := New().ParseAndInit(wrongConfigPath)
 	if err == nil || err.Error() != "'./fixtures/unmarshal.json': unsupported version: 0 (want: 3)" {
 		t.Error("Error expected. Got", err)
 	}
