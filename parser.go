@@ -30,6 +30,19 @@ type Parser struct {
 	koanf *koanf.Koanf
 }
 
+// ParseAndInit reads and parses de configFile, and if there is no
+// error calls Init in the config
+func (p Parser) ParseAndInit(configFile string) (config.ServiceConfig, error) {
+	cfg, err := p.Parse(configFile)
+	if err != nil {
+		return cfg, err
+	}
+	if err := cfg.Init(); err != nil {
+		return cfg, config.CheckErr(err, configFile)
+	}
+	return cfg, nil
+}
+
 // Parse reads and parses the configFile. The values of the file can be
 // override with envvars, using the KRAKEND_ prefix
 func (p Parser) Parse(configFile string) (config.ServiceConfig, error) {
@@ -60,9 +73,6 @@ func (p Parser) Parse(configFile string) (config.ServiceConfig, error) {
 	}
 
 	cleanupServiceConfig(&cfg)
-	if err := cfg.Init(); err != nil {
-		return cfg, config.CheckErr(err, configFile)
-	}
 
 	return cfg, nil
 }
