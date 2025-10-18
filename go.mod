@@ -1,6 +1,6 @@
 module github.com/krakend/krakend-koanf
 
-go 1.25.3
+go 1.24
 
 require (
 	github.com/knadh/koanf/parsers/json v1.0.0
