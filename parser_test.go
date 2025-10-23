@@ -17,7 +17,7 @@ func TestNew_ok(t *testing.T) {
 	}
 	for _, configContent := range configContents {
 		t.Run(configContent.format, func(t *testing.T) {
-			serviceConfig, err := New().Parse(configContent.path)
+			serviceConfig, err := New().ParseWithoutInit(configContent.path)
 			if err != nil {
 				t.Error("Unexpected error. Got", err.Error())
 			}
@@ -81,7 +81,7 @@ func TestNew_errorMessages(t *testing.T) {
 		},
 	} {
 		t.Run(configContent.path, func(t *testing.T) {
-			_, err := New().Parse("./fixtures/" + configContent.path)
+			_, err := New().ParseWithoutInit("./fixtures/" + configContent.path)
 			if err == nil {
 				t.Errorf("%s: Expecting error", configContent.path)
 				return
@@ -141,7 +141,7 @@ func testExtraNestedConfigKey(extraConfig map[string]interface{}, t *testing.T) 
 }
 
 func TestNew_unknownFile(t *testing.T) {
-	_, err := New().Parse("/nowhere/in/the/fs.json")
+	_, err := New().ParseWithoutInit("/nowhere/in/the/fs.json")
 	if err == nil || !strings.Contains(err.Error(), "no such file or directory") {
 		t.Errorf("Error expected. Got '%s'", err)
 	}
@@ -150,7 +150,7 @@ func TestNew_unknownFile(t *testing.T) {
 func TestNew_readingError(t *testing.T) {
 	wrongConfigPath := "./fixtures/reading.json"
 	expected := "'./fixtures/reading.json': invalid character 'h' looking for beginning of object key string"
-	_, err := New().Parse(wrongConfigPath)
+	_, err := New().ParseWithoutInit(wrongConfigPath)
 	if err == nil || err.Error() != expected {
 		t.Errorf("Error expected. Got '%s'", err)
 	}
@@ -158,7 +158,7 @@ func TestNew_readingError(t *testing.T) {
 
 func TestNew_initError(t *testing.T) {
 	wrongConfigPath := "./fixtures/unmarshal.json"
-	_, err := New().ParseAndInit(wrongConfigPath)
+	_, err := New().Parse(wrongConfigPath)
 	if err == nil || err.Error() != "'./fixtures/unmarshal.json': unsupported version: 0 (want: 3)" {
 		t.Error("Error expected. Got", err)
 	}
