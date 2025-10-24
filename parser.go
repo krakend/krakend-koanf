@@ -4,6 +4,7 @@ package koanf
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/knadh/koanf/parsers/json"
 	"github.com/knadh/koanf/parsers/toml"
@@ -15,6 +16,10 @@ import (
 )
 
 var delimiter = "."
+
+const (
+	prefix = "KRAKEND_"
+)
 
 // New creates a new parser using the koanf library
 func New() Parser {
@@ -63,7 +68,10 @@ func (p Parser) ParseWithoutInit(configFile string) (config.ServiceConfig, error
 	if err := p.koanf.Load(file.Provider(configFile), kp); err != nil {
 		return cfg, fmt.Errorf("'%s': %s", configFile, err.Error())
 	}
-	p.koanf.Load(env.Provider("KRAKEND_", delimiter, nil), nil)
+	cb := func(s string) string {
+		return strings.ToLower(strings.TrimPrefix(s, prefix))
+	}
+	p.koanf.Load(env.Provider(prefix, delimiter, cb), nil)
 
 	uCfg := koanf.UnmarshalConf{
 		Tag: "mapstructure",
