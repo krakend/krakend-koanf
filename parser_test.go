@@ -13,13 +13,15 @@ func TestNew_ok(t *testing.T) {
 	}{
 		{"json", "./fixtures/ok.json"},
 		{"toml", "./fixtures/ok.toml"},
-		// {"yaml", "./fixtures/ok.yaml"},
+		{"yaml", "./fixtures/ok.yaml"},
+		{"yml", "./fixtures/ok.yml"},
 	}
 	for _, configContent := range configContents {
 		t.Run(configContent.format, func(t *testing.T) {
 			serviceConfig, err := New().ParseWithoutInit(configContent.path)
 			if err != nil {
 				t.Error("Unexpected error. Got", err.Error())
+				return
 			}
 
 			endpoint := serviceConfig.Endpoints[0]
@@ -29,6 +31,7 @@ func TestNew_ok(t *testing.T) {
 				testExtraConfig(endpointExtraConfiguration, t)
 			} else {
 				t.Errorf("Extra config is not present in EndpointConfig: %#v", endpoint)
+				return
 			}
 
 			backend := endpoint.Backend[0]
@@ -37,6 +40,7 @@ func TestNew_ok(t *testing.T) {
 				testExtraConfig(backendExtraConfiguration, t)
 			} else {
 				t.Error("Extra config is not present in BackendConfig")
+				return
 			}
 		})
 	}

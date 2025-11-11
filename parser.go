@@ -56,8 +56,7 @@ func (p Parser) ParseWithoutInit(configFile string) (config.ServiceConfig, error
 	var kp koanf.Parser
 	ext := filepath.Ext(configFile)
 	switch ext {
-	case ".yaml":
-	case ".yml":
+	case ".yml", ".yaml":
 		kp = yaml.Parser()
 	case ".toml":
 		kp = toml.Parser()
