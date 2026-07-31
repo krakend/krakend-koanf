@@ -30,7 +30,7 @@ func NewWithOptions(delimiter string) Parser {
 	return Parser{koanf.New(delimiter)}
 }
 
-// Parser is a config parser using the viper library
+// Parser is a config parser using the koanf library
 type Parser struct {
 	koanf *koanf.Koanf
 }
