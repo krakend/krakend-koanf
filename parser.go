@@ -12,7 +12,7 @@ import (
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/v2"
-	"github.com/luraproject/lura/v2/config"
+	"github.com/luraproject/lura/v3/config"
 )
 
 var delimiter = "."
@@ -30,7 +30,7 @@ func NewWithOptions(delimiter string) Parser {
 	return Parser{koanf.New(delimiter)}
 }
 
-// Parser is a config parser using the viper library
+// Parser is a config parser using the koanf library
 type Parser struct {
 	koanf *koanf.Koanf
 }
